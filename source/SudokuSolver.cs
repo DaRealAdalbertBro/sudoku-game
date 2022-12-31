@@ -204,6 +204,22 @@
                                 return false;
                             }
                         }
+
+                        // check if the cell is a duplicate in the 3x3 box
+                        int xBox = xIterator / 3;
+                        int yBox = yIterator / 3;
+
+                        for (int k = xBox * 3; k < xBox * 3 + 3; k++)
+                        {
+                            for (int l = yBox * 3; l < yBox * 3 + 3; l++)
+                            {
+                                if (k != xIterator && l != yIterator && t_board[k, l] == t_board[xIterator, yIterator])
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+
                     }
                 }
             }
@@ -288,7 +304,7 @@
                 int yCoord = random.Next(board.GetLength(1));
 
                 // clear the board
-                if(board[xCoord, yCoord] != 0)
+                if (board[xCoord, yCoord] != 0)
                 {
                     board[xCoord, yCoord] = 0;
                     generatedNumbers--;
