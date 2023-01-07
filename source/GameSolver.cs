@@ -17,7 +17,7 @@ namespace GameSolver
             /// <param name="t_value">Value to check</param>
             /// <returns>True if the value is present in the matrix, false otherwise.</returns>
             /// <exception cref="GameInputInvalid">Thrown when the game board is corrupted or invalid.</exception>
-            public static Tuple<int, int> CoordinatesOf<T>(T[,] t_matrix, T t_value)
+            public static Tuple<int, int> CoordinatesOf<T>(T[,]? t_matrix, T t_value)
             {
                 if (t_matrix == null || t_matrix.Length == 0)
                 {
@@ -76,7 +76,7 @@ namespace GameSolver
                 // Read the file and display it line by line.
                 using (StreamReader sr = File.OpenText(t_fileName))
                 {
-                    string line = "";
+                    string? line = "";
 
                     while ((line = sr.ReadLine()) != null)
                     {

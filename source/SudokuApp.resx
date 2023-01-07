@@ -101,25 +101,25 @@
     <value>O&amp;ff</value>
   </data>
   <data name="showCollisionsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="showCollisionsMenuItem.Text" xml:space="preserve">
     <value>Show &amp;Collisions</value>
   </data>
   <data name="threadingOn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="threadingOn.Text" xml:space="preserve">
     <value>&amp;On</value>
   </data>
   <data name="threadingOff.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="threadingOff.Text" xml:space="preserve">
     <value>O&amp;ff</value>
   </data>
   <data name="useMultiThreadingMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="useMultiThreadingMenuItem.Text" xml:space="preserve">
     <value>&amp;Multi-Threading</value>
@@ -137,31 +137,31 @@
     <value>O&amp;ff</value>
   </data>
   <data name="showTimerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="showTimerToolStripMenuItem.Text" xml:space="preserve">
     <value>Show &amp;Timer</value>
   </data>
   <data name="englishLanguageMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="englishLanguageMenuItem.Text" xml:space="preserve">
     <value>&amp;English (Default)</value>
   </data>
   <data name="germanLanguageMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="germanLanguageMenuItem.Text" xml:space="preserve">
-    <value>&amp;German</value>
+    <value>&amp;Deutsch</value>
   </data>
   <data name="japaneseLanguageMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="japaneseLanguageMenuItem.Text" xml:space="preserve">
     <value>&amp;日本語</value>
   </data>
   <data name="selectLanguageToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="selectLanguageToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Language</value>

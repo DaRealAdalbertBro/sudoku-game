@@ -7,21 +7,34 @@
     {
         /// <summary>Enum for threading type.</summary>
         /// <remarks><c>SINGLE</c> = single threading, <c>MULTI</c> = multi threading</remarks>
-        private enum _THREADING { SINGLE, MULTI };
+        private enum _THREADING
+        {
+            SINGLE,
+            MULTI
+        };
+
         /// <summary>The threading type.</summary>
         private _THREADING _multi_threading;
+
         /// <summary>The max number of threads to use.</summary>
         private sbyte _max_threads = 1;
 
         /// <summary>Enum for difficulty type.</summary>
-        public enum DIFFICULTY { GARDEN, TOASTER, HELL, OOTW }
+        public enum DIFFICULTY
+        {
+            GARDEN,
+            TOASTER,
+            HELL,
+            OOTW
+        }
 
         /// <summary>Public constructor.</summary>
         /// <param name="t_board">2 dimensional array of 32-bit integers.</param>
         /// <param name="t_multi_threading">Whether to use multi threading or not.</param>
         /// <param name="t_max_threads">Max number of threads to use, accepts <c>x > 1</c> thread count.</param>
         /// <exception cref="GameInputInvalid">Thrown when the input is corrupted or invalid.</exception>
-        public Sudoku(int[,] t_board, bool t_multi_threading = false, sbyte t_max_threads = 1) : base(t_board)
+        public Sudoku(int[,] t_board, bool t_multi_threading = false, sbyte t_max_threads = 1)
+            : base(t_board)
         {
             // Change the board to the input board
             this.gameBoard = t_board;
@@ -29,10 +42,9 @@
             // decide whether to use single or multi threading based on user input
             this._multi_threading = t_multi_threading ? _THREADING.MULTI : _THREADING.SINGLE;
 
-            // if user wants to use multi threading
             if (t_multi_threading)
             {
-                // if the number of threads is less than or equal to 1, return GameInputInvalid exception
+                // if the number of threads is less than or equal to 1, return exception
                 if (t_max_threads <= 1)
                 {
                     throw new GameInputInvalid("The number of threads must be greater than 1!");
@@ -67,7 +79,6 @@
             {
                 throw new GameInputInvalid("The board cannot be null!");
             }
-
             // if the board is not 9x9, return Game Input Invalid exception
             else if (t_board.GetLength(0) != 9 || t_board.GetLength(1) != 9)
             {
@@ -75,7 +86,6 @@
             }
 
             // if the board is valid, change the board
-            // cannot use buffer block copy, because the gameBoard can be null at this point
             this.gameBoard = (int[,])t_board.Clone();
             this.originalBoard = (int[,])t_board.Clone();
         }
@@ -151,22 +161,24 @@
             {
                 for (int yIterator = 0; yIterator < t_board.GetLength(1); yIterator++)
                 {
-                    // if the cell is empty
-                    if (t_board[xIterator, yIterator] == 0)
+                    // if the cell is not empty, continue
+                    if (t_board[xIterator, yIterator] != 0)
                     {
-                        // get the possibilities of the cell
-                        int[] possibilities = _get_possibilities(t_board, xIterator, yIterator);
+                        continue;
+                    }
 
-                        // if the length of the possibilities is greater than the length of the longest cell probabilities
-                        if (possibilities.Length > longestCellProbabilities.Length)
-                        {
-                            // set the longest cell probabilities to the possibilities
-                            longestCellProbabilities = possibilities;
+                    // get the possibilities of the cell
+                    int[] possibilities = _get_possibilities(t_board, xIterator, yIterator);
 
-                            // set the x coordinate and y coordinate of the longest cell probabilities
-                            xCoord = xIterator;
-                            yCoord = yIterator;
-                        }
+                    // if the length of the possibilities is greater than the length of the longest cell probabilities
+                    if (possibilities.Length > longestCellProbabilities.Length)
+                    {
+                        // set the longest cell probabilities to the possibilities
+                        longestCellProbabilities = possibilities;
+
+                        // set the x coordinate and y coordinate of the longest cell probabilities
+                        xCoord = xIterator;
+                        yCoord = yIterator;
                     }
                 }
             }
@@ -184,42 +196,51 @@
             {
                 for (int yIterator = 0; yIterator < t_board.GetLength(1); yIterator++)
                 {
-                    // if the cell is not empty
-                    if (t_board[xIterator, yIterator] != 0)
+                    // if the cell is empty, continue
+                    if (t_board[xIterator, yIterator] == 0)
                     {
-                        // check if the cell is a duplicate in the row
-                        for (int k = 0; k < t_board.GetLength(1); k++)
+                        continue;
+                    }
+
+                    // check if is duplicate in the row
+                    for (int k = 0; k < t_board.GetLength(1); k++)
+                    {
+                        if (
+                            k != yIterator && t_board[xIterator, k] == t_board[xIterator, yIterator]
+                        )
                         {
-                            if (k != yIterator && t_board[xIterator, k] == t_board[xIterator, yIterator])
+                            return false;
+                        }
+                    }
+
+                    // check if the cell is a duplicate in the column
+                    for (int k = 0; k < t_board.GetLength(0); k++)
+                    {
+                        if (
+                            k != xIterator && t_board[k, yIterator] == t_board[xIterator, yIterator]
+                        )
+                        {
+                            return false;
+                        }
+                    }
+
+                    // check if the cell is a duplicate in the 3x3 box
+                    int xBox = xIterator / 3;
+                    int yBox = yIterator / 3;
+
+                    for (int k = xBox * 3; k < xBox * 3 + 3; k++)
+                    {
+                        for (int l = yBox * 3; l < yBox * 3 + 3; l++)
+                        {
+                            if (
+                                k != xIterator
+                                && l != yIterator
+                                && t_board[k, l] == t_board[xIterator, yIterator]
+                            )
                             {
                                 return false;
                             }
                         }
-
-                        // check if the cell is a duplicate in the column
-                        for (int k = 0; k < t_board.GetLength(0); k++)
-                        {
-                            if (k != xIterator && t_board[k, yIterator] == t_board[xIterator, yIterator])
-                            {
-                                return false;
-                            }
-                        }
-
-                        // check if the cell is a duplicate in the 3x3 box
-                        int xBox = xIterator / 3;
-                        int yBox = yIterator / 3;
-
-                        for (int k = xBox * 3; k < xBox * 3 + 3; k++)
-                        {
-                            for (int l = yBox * 3; l < yBox * 3 + 3; l++)
-                            {
-                                if (k != xIterator && l != yIterator && t_board[k, l] == t_board[xIterator, yIterator])
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-
                     }
                 }
             }
@@ -227,7 +248,6 @@
             // if the board is valid, return true
             return true;
         }
-
 
         /// <returns>2 dimensional array of 32-bit integers as sudoku board.</returns>
         public int[,] GenerateSudoku(DIFFICULTY difficulty)
@@ -246,12 +266,23 @@
             // store max number of generated numbers
             int maxOriginNumbers = 6;
             int generatedNumbers = 0;
+            int maxIterations = 200;
+            int currentIterations = 0;
 
+            // set the first number
             board[0, 0] = random.Next(1, 10);
 
-            // first generate some random numbers
+            // generate other random numbers
             while (generatedNumbers < maxOriginNumbers)
             {
+                // start over if the generation takes too long / fails
+                currentIterations++;
+                if (currentIterations > maxIterations)
+                {
+                    goto StartGeneration;
+                }
+
+                // generate a random number and its coordinates
                 int randomNumber = random.Next(1, 10);
                 int xCoord = random.Next(1 * generatedNumbers, board.GetLength(0));
                 int yCoord = random.Next(board.GetLength(1));
@@ -280,7 +311,7 @@
             }
             else
             {
-                // GARDEN DIFFICULTY
+                // default difficulty [GARDEN]
                 maxOriginNumbers = random.Next(36, 47);
             }
 
@@ -292,11 +323,11 @@
                 goto StartGeneration;
             }
 
+            // get the solved board
             board = this.gameBoard;
-
             generatedNumbers = 81;
 
-            // go through the solved board and remove elements from it
+            // go through the solved board and remove random elements from it
             while (maxOriginNumbers < generatedNumbers)
             {
                 // get random coordinates
@@ -311,7 +342,6 @@
                 }
             }
 
-            // return the board
             return board;
         }
 
@@ -320,7 +350,6 @@
         /// <exception cref="GameInputInvalid">Thrown when the input is corrupted or invalid.</exception>
         public bool Solve()
         {
-            // check if the board is valid
             if (this.gameBoard == null)
             {
                 throw new GameInputInvalid("The board cannot be null!");
@@ -339,7 +368,6 @@
 
             // Get the longest cell probabilities
             Tuple<int, int, int[]> emptyCell = _get_longest_cell_probabilities(this.gameBoard);
-
             int xCoord = emptyCell.Item1;
             int yCoord = emptyCell.Item2;
 
@@ -361,38 +389,54 @@
             parallelOptions.TaskScheduler = TaskScheduler.Default;
 
             // Use parallel threads to solve the board faster
-            Parallel.For(0, possibilities.Length, (iterator, state) =>
-            {
-                // create a new sudoku board
-                int[,] newGameBoard = new int[9, 9];
-
-                // copy the current game board to the new game board
-                System.Buffer.BlockCopy(this.gameBoard, 0, newGameBoard, 0, this.gameBoard.Length * sizeof(int));
-
-                // if the cell cannot be placed, return
-                if (!_can_be_placed(newGameBoard, xCoord, yCoord, possibilities[iterator]))
+            Parallel.For(
+                0,
+                possibilities.Length,
+                (iterator, state) =>
                 {
-                    return;
+                    // create a new sudoku board
+                    int[,] newGameBoard = new int[9, 9];
+
+                    // copy the current game board to the new game board
+                    System.Buffer.BlockCopy(
+                        this.gameBoard,
+                        0,
+                        newGameBoard,
+                        0,
+                        this.gameBoard.Length * sizeof(int)
+                    );
+
+                    // if the cell cannot be placed, return
+                    if (!_can_be_placed(newGameBoard, xCoord, yCoord, possibilities[iterator]))
+                    {
+                        return;
+                    }
+
+                    // place the number in the cell
+                    newGameBoard[xCoord, yCoord] = possibilities[iterator];
+
+                    // if the board cannot be solved, return
+                    if (!_can_be_solved(newGameBoard))
+                    {
+                        return;
+                    }
+
+                    // save the new game board to the current game board
+                    System.Buffer.BlockCopy(
+                        newGameBoard,
+                        0,
+                        this.gameBoard,
+                        0,
+                        newGameBoard.Length * sizeof(int)
+                    );
+
+                    // break the parallel loop
+                    state.Break();
                 }
-
-                // place the number in the cell
-                newGameBoard[xCoord, yCoord] = possibilities[iterator];
-
-                // if the board cannot be solved, return
-                if (!_can_be_solved(newGameBoard))
-                {
-                    return;
-                }
-
-                // save the new game board to the current game board
-                System.Buffer.BlockCopy(newGameBoard, 0, this.gameBoard, 0, newGameBoard.Length * sizeof(int));
-
-                // break the parallel loop
-                state.Break();
-            });
+            );
 
             // return true if the board is solved
-            return this.gameBoard.Cast<int>().Any(x => x == 0) ? false : true;
+            return this.gameBoard.Cast<int>().All(x => x != 0);
         }
 
         /// <returns>An array of all the possible numbers for a given cell.</returns>
@@ -466,7 +510,11 @@
                 for (int yIterator = 0; yIterator < t_board.GetLength(1); yIterator++)
                 {
                     // get the possibilities for each cell
-                    allPossibilities[xIterator, yIterator] = _get_possibilities(t_board, xIterator, yIterator);
+                    allPossibilities[xIterator, yIterator] = _get_possibilities(
+                        t_board,
+                        xIterator,
+                        yIterator
+                    );
                 }
             }
 
@@ -519,7 +567,12 @@
         /// <param name="t_xCoord">The X coordinate of the cell.</param>
         /// <param name="t_yCoord">The Y coordinate of the cell.</param>
         /// <param name="t_number">The number to be checked.</param>
-        private bool _can_be_placed_in_square(int[,] t_board, int t_xCoord = 0, int t_yCoord = 0, int t_number = 0)
+        private bool _can_be_placed_in_square(
+            int[,] t_board,
+            int t_xCoord = 0,
+            int t_yCoord = 0,
+            int t_number = 0
+        )
         {
             // get the starting X and Y coordinate of the square
             int xSquare = t_xCoord - (t_xCoord % 3);
@@ -550,7 +603,9 @@
         private bool _can_be_placed(int[,] t_board, int t_xCoord, int t_yCoord, int t_number)
         {
             // check if the number can be placed in the row, column and square
-            return _can_be_placed_in_row(t_board, t_xCoord, t_number) && _can_be_placed_in_column(t_board, t_yCoord, t_number) && _can_be_placed_in_square(t_board, t_xCoord, t_yCoord, t_number);
+            return _can_be_placed_in_row(t_board, t_xCoord, t_number)
+                && _can_be_placed_in_column(t_board, t_yCoord, t_number)
+                && _can_be_placed_in_square(t_board, t_xCoord, t_yCoord, t_number);
         }
 
         /// <remarks>Creates an instance of the <see cref="Sudoku"/> class.</remarks>
@@ -563,7 +618,6 @@
         {
             Sudoku instance = new Sudoku(t_board);
             return instance._can_be_placed(t_board, t_xCoord, t_yCoord, t_number);
-
         }
 
         /// <returns><c>Boolean</c> value indicating if the board can be solved with the current state.</returns>
@@ -572,7 +626,6 @@
         {
             // get the index of first empty cell from the current sudoku board
             Tuple<int, int> emptyCell = GameSolver.ExtensionMethods.CoordinatesOf(board, 0);
-
             int xCoord = emptyCell.Item1;
             int yCoord = emptyCell.Item2;
 
@@ -589,13 +642,11 @@
             // iterate through the possibilities of the origin cell
             foreach (int originNumber in originList)
             {
-
                 // if the number can be placed, place it to the temporary board
                 if (_can_be_placed(board, xCoord, yCoord, originNumber))
                 {
                     board[xCoord, yCoord] = originNumber;
 
-                    // if the sudoku is solved, print the sudoku and return true
                     if (_can_be_solved(board))
                     {
                         return true;
@@ -609,6 +660,5 @@
             // if the sudoku is not solved, return false
             return false;
         }
-
     }
 }
